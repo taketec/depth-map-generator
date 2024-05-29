@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { registerUser } from '../apis/auth';
-import { GoogleLogin } from 'react-google-login'; // Import GoogleLogin
 
 const Register = () => {
   const navigate = useNavigate();
@@ -106,14 +105,6 @@ const Register = () => {
 
         <div className="text-center mt-4 text-[#b9bbbe]">
           <p>Or</p>
-          <GoogleLogin
-            clientId="YOUR_GOOGLE_CLIENT_ID" // Replace with your Google client ID
-            buttonText="Sign up with Google"
-            onSuccess={handleGoogleSuccess}
-            onFailure={handleGoogleFailure}
-            cookiePolicy={'single_host_origin'}
-            className="google-login-button mt-2"
-          />
         </div>
       </div>
     </div>

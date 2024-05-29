@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { loginUser, validUser } from '../apis/auth';
 import ClipLoader from 'react-spinners/ClipLoader';
-import { GoogleLogin } from 'react-google-login'; // Import GoogleLogin
+//import { shell } from 'electron';
 
 const Login = () => {
   const navigate = useNavigate();
@@ -10,6 +10,7 @@ const Login = () => {
   const [password, setPassword] = useState('');
   const [errorMessage, setErrorMessage] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
+  const [token, setToken] = useState(null);
 
   useEffect(() => {
     const checkAuth = async () => {
@@ -32,6 +33,17 @@ const Login = () => {
     checkAuth();
   }, [navigate]);
 
+  useEffect(() => {
+      window.electron.receiveData((receivedData) => {
+        setToken(receivedData);
+      });
+      },
+     []);
+
+  useEffect(()=>{
+    console.log(token)
+  },[token])
+
   const handleSubmit = async (event) => {
     event.preventDefault();
     setIsLoading(true);
@@ -52,12 +64,10 @@ const Login = () => {
   };
 
   // Handle successful Google login
-  const handleGoogleSuccess = (response) => {
-    console.log('Google login successful:', response);
-    // Use response.profileObj or response.tokenId for further processing
-    // You might want to authenticate the user on the backend using the token
-    // and then navigate to the desired page.
+  const googleLogin = () => {
+    window.electron.openExternalLink('http://localhost:3000/');
   };
+  
 
   // Handle failed Google login
   const handleGoogleFailure = (response) => {
@@ -119,14 +129,9 @@ const Login = () => {
 
         <div className="text-center mt-4 text-[#b9bbbe]">
           <p>Or</p>
-          <GoogleLogin
-            clientId="YOUR_GOOGLE_CLIENT_ID" // Replace with your Google client ID
-            buttonText="Sign in with Google"
-            onSuccess={handleGoogleSuccess}
-            onFailure={handleGoogleFailure}
-            cookiePolicy={'single_host_origin'}
-            className="google-login-button mt-2"
-          />
+          <button onClick={() => googleLogin()} className="block w-full px-4 py-2 mt-4 text-sm font-medium text-center text-white bg-blue-500 rounded-md hover:bg-blue-600 focus:outline-none focus:bg-blue-600">
+            Sign in with Google 🚀
+          </button>
         </div>
       </div>
     </div>
